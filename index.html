@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TE AMO</title>
+    <style>
+        body {
+            background-color: black;
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .falling-text {
+            position: absolute;
+            color: red;
+            font-size: 20px;
+            text-shadow: 0 0 5px rgba(255, 0, 0, 0.7);
+            user-select: none;
+        }
+        
+        .heart {
+            color: red;
+            font-size: 24px;
+            position: absolute;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.9);
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        const words = ["TE", "AMO"];
+        const hearts = ["❤", "♥", "💖", "💘", "💝"];
+        
+        function createFallingElement() {
+            const isHeart = Math.random() > 0.7;
+            const element = document.createElement("div");
+            
+            if (isHeart) {
+                element.className = "heart";
+                const heart = hearts[Math.floor(Math.random() * hearts.length)];
+                element.textContent = heart;
+                element.style.fontSize = `${Math.random() * 20 + 15}px`;
+            } else {
+                element.className = "falling-text";
+                const word = words[Math.floor(Math.random() * words.length)];
+                element.textContent = word;
+                element.style.fontSize = `${Math.random() * 15 + 10}px`;
+            }
+            
+            element.style.left = `${Math.random() * window.innerWidth}px`;
+            element.style.opacity = Math.random() * 0.5 + 0.5;
+            
+            document.body.appendChild(element);
+            
+            let top = -50;
+            const speed = Math.random() * 3 + 1;
+            
+            function fall() {
+                top += speed;
+                element.style.top = `${top}px`;
+                
+                if (top < window.innerHeight) {
+                    requestAnimationFrame(fall);
+                } else {
+                    element.remove();
+                }
+            }
+            
+            fall();
+        }
+        
+        // Crear múltiples elementos que caen
+        setInterval(createFallingElement, 100);
+        
+        // Cambiar el color de fondo periódicamente para efecto "hacker"
+        setInterval(() => {
+            document.body.style.backgroundColor = `rgba(0, ${Math.floor(Math.random() * 10)}, 0, 0.1)`;
+        }, 1000);
+    </script>
+</body>
+</html>
