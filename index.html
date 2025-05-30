@@ -2,106 +2,113 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TE AMO ❤️</title>
     <style>
         body {
-            background: #000;
+            background-color: #000;
             margin: 0;
+            padding: 0;
             overflow: hidden;
+            touch-action: manipulation;
             height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: 'Arial', sans-serif;
         }
         
-        .message {
-            position: relative;
-            color: #ff0033;
-            font-size: 10vw;
-            text-shadow: 
-                0 0 10px #ff0033,
-                0 0 20px #ff0033,
-                0 0 30px #ff6699;
-            animation: pulse 1.5s infinite alternate;
-        }
-        
-        @keyframes pulse {
-            to { transform: scale(1.1); opacity: 0.9; }
-        }
-        
-        .matrix-effect {
+        .matrix-rain {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1;
-            opacity: 0.3;
-            overflow: hidden;
         }
         
-        .matrix-column {
+        .text-drop {
             position: absolute;
-            color: #00ff44;
-            font-family: monospace;
-            font-size: 2vmin;
-            writing-mode: vertical-rl;
+            color: #ff0033;
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            font-weight: bold;
+            text-shadow: 0 0 5px #ff0033;
+            opacity: 0.9;
             animation: fall linear forwards;
+            will-change: transform;
         }
         
         @keyframes fall {
-            to { transform: translateY(100vh); }
+            to {
+                transform: translateY(100vh);
+            }
+        }
+        
+        .message {
+            position: absolute;
+            bottom: 20%;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: #ff0033;
+            font-family: 'Courier New', monospace;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 0 0 10px #ff0033;
+            z-index: 100;
         }
     </style>
 </head>
 <body>
-    <div class="matrix-effect" id="matrix"></div>
+    <div class="matrix-rain" id="matrixRain"></div>
     <div class="message">TE AMO ❤️</div>
 
     <script>
-        // Efecto Matrix mejorado
-        const matrix = document.getElementById('matrix');
-        const chars = "01❤TEAMO";
+        const chars = "01TEAMO❤♡";
+        const matrixContainer = document.getElementById('matrixRain');
+        const columns = Math.floor(window.innerWidth / 20);
+        const drops = [];
         
-        function createMatrix() {
-            const col = document.createElement('div');
-            col.className = 'matrix-column';
-            col.style.left = `${Math.random() * 100}%`;
-            col.style.animationDuration = `${3 + Math.random() * 7}s`;
-            col.style.animationDelay = `${Math.random() * 2}s`;
+        // Configuración de la lluvia
+        for (let i = 0; i < columns; i++) {
+            drops[i] = 1;
             
-            let content = '';
-            for (let i = 0; i < 30; i++) {
-                content += chars[Math.floor(Math.random() * chars.length)] + '<br>';
-            }
-            col.innerHTML = content;
+            const drop = document.createElement('div');
+            drop.className = 'text-drop';
+            drop.style.left = (i * 20) + 'px';
+            matrixContainer.appendChild(drop);
             
-            matrix.appendChild(col);
-            
-            setTimeout(() => {
-                col.remove();
-            }, 10000);
+            animateDrop(drop, i);
         }
         
-        // Crear columnas cada 300ms
-        setInterval(createMatrix, 300);
+        function animateDrop(element, column) {
+            const speed = 50 + Math.random() * 50;
+            const length = 5 + Math.floor(Math.random() * 10);
+            
+            let text = '';
+            for (let i = 0; i < length; i++) {
+                text += chars[Math.floor(Math.random() * chars.length)] + '<br>';
+            }
+            
+            element.innerHTML = text;
+            element.style.top = (-20 * length) + 'px';
+            element.style.animationDuration = (speed / 10) + 's';
+            
+            setTimeout(() => {
+                animateDrop(element, column);
+            }, speed * 10);
+        }
         
-        // Efecto interactivo
-        document.addEventListener('click', (e) => {
+        // Efecto interactivo al tocar
+        document.addEventListener('touchstart', (e) => {
             const heart = document.createElement('div');
-            heart.innerHTML = '❤️';
-            heart.style.position = 'absolute';
-            heart.style.left = `${e.clientX}px`;
-            heart.style.top = `${e.clientY}px`;
-            heart.style.fontSize = '30px';
-            heart.style.animation = 'pulse 1s ease-out forwards';
-            document.body.appendChild(heart);
+            heart.className = 'text-drop';
+            heart.innerHTML = '❤';
+            heart.style.left = e.touches[0].clientX + 'px';
+            heart.style.top = e.touches[0].clientY + 'px';
+            heart.style.animationDuration = '2s';
+            heart.style.fontSize = '24px';
+            matrixContainer.appendChild(heart);
             
             setTimeout(() => {
                 heart.remove();
-            }, 1000);
+            }, 2000);
         });
     </script>
 </body>
