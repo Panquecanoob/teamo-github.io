@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TE AMO ❤️</title>
+    <style>
+        body {
+            background: #000;
+            margin: 0;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        .message {
+            position: relative;
+            color: #ff0033;
+            font-size: 10vw;
+            text-shadow: 
+                0 0 10px #ff0033,
+                0 0 20px #ff0033,
+                0 0 30px #ff6699;
+            animation: pulse 1.5s infinite alternate;
+        }
+        
+        @keyframes pulse {
+            to { transform: scale(1.1); opacity: 0.9; }
+        }
+        
+        .matrix-effect {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
+            overflow: hidden;
+        }
+        
+        .matrix-column {
+            position: absolute;
+            color: #00ff44;
+            font-family: monospace;
+            font-size: 2vmin;
+            writing-mode: vertical-rl;
+            animation: fall linear forwards;
+        }
+        
+        @keyframes fall {
+            to { transform: translateY(100vh); }
+        }
+    </style>
+</head>
+<body>
+    <div class="matrix-effect" id="matrix"></div>
+    <div class="message">TE AMO ❤️</div>
+
+    <script>
+        // Efecto Matrix mejorado
+        const matrix = document.getElementById('matrix');
+        const chars = "01❤TEAMO";
+        
+        function createMatrix() {
+            const col = document.createElement('div');
+            col.className = 'matrix-column';
+            col.style.left = `${Math.random() * 100}%`;
+            col.style.animationDuration = `${3 + Math.random() * 7}s`;
+            col.style.animationDelay = `${Math.random() * 2}s`;
+            
+            let content = '';
+            for (let i = 0; i < 30; i++) {
+                content += chars[Math.floor(Math.random() * chars.length)] + '<br>';
+            }
+            col.innerHTML = content;
+            
+            matrix.appendChild(col);
+            
+            setTimeout(() => {
+                col.remove();
+            }, 10000);
+        }
+        
+        // Crear columnas cada 300ms
+        setInterval(createMatrix, 300);
+        
+        // Efecto interactivo
+        document.addEventListener('click', (e) => {
+            const heart = document.createElement('div');
+            heart.innerHTML = '❤️';
+            heart.style.position = 'absolute';
+            heart.style.left = `${e.clientX}px`;
+            heart.style.top = `${e.clientY}px`;
+            heart.style.fontSize = '30px';
+            heart.style.animation = 'pulse 1s ease-out forwards';
+            document.body.appendChild(heart);
+            
+            setTimeout(() => {
+                heart.remove();
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
